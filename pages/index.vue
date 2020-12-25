@@ -1,50 +1,84 @@
 <template>
   <div class="container">
-    
+    <div class="filter">
+      <span class="filter__sort">Сортировать по: </span>
+      <select @change="changeFilter" v-model="filter" class="filter__select">
+        <option value="price" class="option">цене</option>
+        <option value="rating" class="option">популярности</option>
+      </select>
+    </div>
+    <div class="list">
+      <product-card v-for="item in products" :key="item.id" :product="item" />
+    </div>
   </div>
 </template>
 
 <script>
-export default {}
+import ProductCard from "~/components/ProductCard";
+
+export default {
+  components: {
+    ProductCard,
+  },
+
+  data() {
+    return {
+      filter: "price",
+    };
+  },
+
+  async fetch() {
+    await this.$store.dispatch("loadProducts", 1);
+  },
+  computed: {
+    products() {
+      return this.$store.getters.products;
+    },
+  },
+  methods: {
+    changeFilter() {
+      if (this.filter === 'price') {
+        this.$store.commit('sortByPrice')
+      }
+      if (this.filter === 'rating') {
+        this.$store.commit('sortByRating')
+      }
+    }
+  }
+};
 </script>
 
-<style>
+<style lang="scss" scoped>
 .container {
-  margin: 0 auto;
-  min-height: 100vh;
+  width: 100%;
+}
+.list {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+  grid-gap: 16px;
+  padding-left: 50px;
+}
+.filter {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  text-align: center;
-}
+  margin-bottom: 34px;
 
-.title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+  &__select {
+    position: relative;
+    border: none;
+    color: $grey;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url("../assets/img/arrow.png") no-repeat;
+    background-position: right top 56%, 0 0;
+    margin-left: 4px;
+    padding-right: 8px;
+    &:focus {
+      outline: none;
+    }
+  }
 }
 </style>

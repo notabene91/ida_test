@@ -9,7 +9,9 @@
         class="categories__item"
       >
         <nuxt-link
-          class="link categories__link" 
+          class="link categories__link"
+          active-class="categories__link_active"
+          :class="{'categories__link_active' : cat.isActive}"
           :to="`/category/${cat.id}`"
         >{{ cat.name }}
         </nuxt-link>
@@ -25,8 +27,14 @@ export default {
       return this.$store.getters.categories;
     },
   },
+  created() {
+    if (this.$route.fullPath === '/') {
+      this.$store.commit('setActivity')
+    }
+  },
   methods: {
     routerSwitch(item) {
+      this.$store.commit('setInactive')
       if (this.$route.path !== item) {
         this.$router.push(item);
       }
@@ -39,6 +47,7 @@ export default {
 .categories {
   width: 17%;
   &__list {
+    position: fixed;
     margin: 0;
     padding: 0;
     list-style-type: none;
@@ -63,6 +72,5 @@ export default {
       text-decoration: underline;
     }
   }
-
 }
 </style>
