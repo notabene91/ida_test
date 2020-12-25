@@ -3,5 +3,5 @@ test task for idaprojects
 
 ### Запуск проекта на локальном сервере
 ```
-npm run serve
+npm run dev
 ```
