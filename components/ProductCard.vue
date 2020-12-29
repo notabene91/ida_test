@@ -16,6 +16,7 @@
       viewBox="0 0 16 16"
       xmlns="http://www.w3.org/2000/svg"
       class="link card__cart"
+      :class="{ card__cart_added: isAdded }"
       @click="addToCart(product.id)"
     >
       <path
@@ -51,19 +52,22 @@ export default {
   props: {
     product: Object,
   },
-  data() {
-    return {
-      isAdded: false
-    }
-  },
   computed: {
     url() {
       return this.$store.getters.url;
     },
+    isAdded: {
+      get() {
+        return this.$store.state.productsInCart.find(
+          (p) => p.id === this.product.id
+        );
+      },
+      set() {},
+    },
   },
   methods: {
     addToCart(id) {
-      this.isAdded = !this.isAdded
+      this.isAdded = !this.isAdded;
       this.$store.commit("addToCart", id);
       const parsed = JSON.stringify(this.$store.getters.productsInCart);
       localStorage.setItem("products", parsed);
@@ -123,6 +127,14 @@ export default {
 
     &:hover .path {
       fill: $darkgrey;
+    }
+
+    &_added .path{
+      fill: $yellow;
+    }
+
+    &_added, &:hover .path {
+      fill: $yellow;
     }
   }
 
