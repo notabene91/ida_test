@@ -133,7 +133,7 @@ export default {
       fill: $yellow;
     }
 
-    &_added, &:hover .path {
+    &_added:hover .path {
       fill: $yellow;
     }
   }
